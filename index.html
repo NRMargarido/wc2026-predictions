@@ -103,6 +103,22 @@ main{max-width:1400px;margin:0 auto;padding:20px 16px}
 .note-item:last-child{border-bottom:none}
 .note-item span{color:#f0c040;font-weight:600}
 
+/* Stats leaderboards */
+.stats-card{background:#161b22;border:1px solid #30363d;border-radius:10px;overflow:hidden;max-width:760px;margin:0 auto 28px}
+.stats-card h3{padding:14px 18px;font-size:.95rem;color:#fff;border-bottom:1px solid #30363d;background:#1c2128}
+.stats-row{display:flex;align-items:center;gap:14px;padding:12px 18px;border-bottom:1px solid #21262d}
+.stats-row:last-child{border-bottom:none}
+.stats-rank{font-size:1.05rem;font-weight:800;width:26px;text-align:center;color:#8b949e}
+.stats-row.r1 .stats-rank{color:#ffd700}
+.stats-row.r2 .stats-rank{color:#c0c0c0}
+.stats-row.r3 .stats-rank{color:#cd7f32}
+.stats-flag{font-size:1.3rem;line-height:1}
+.stats-info{flex:1;min-width:0}
+.stats-name{font-weight:700;color:#fff;font-size:.92rem}
+.stats-team{font-size:.74rem;color:#8b949e;margin-top:1px}
+.stats-value{font-size:1.25rem;font-weight:800;color:#f0c040;text-align:right;min-width:56px;flex-shrink:0}
+.stats-unit{display:block;font-size:.62rem;color:#8b949e;font-weight:500;text-transform:uppercase;letter-spacing:.4px}
+
 /* Responsive */
 @media(max-width:600px){
   header h1{font-size:1.5rem}
@@ -127,6 +143,9 @@ main{max-width:1400px;margin:0 auto;padding:20px 16px}
   <button onclick="showTab('qf')" id="btn-qf">🏅 Quarter-Finals</button>
   <button onclick="showTab('sf')" id="btn-sf">🥈 Semi-Finals</button>
   <button onclick="showTab('final')" id="btn-final">🏆 Final</button>
+  <button onclick="showTab('scorers')" id="btn-scorers">⚽ Top Scorers</button>
+  <button onclick="showTab('assists')" id="btn-assists">🎯 Top Assists</button>
+  <button onclick="showTab('mvp')" id="btn-mvp">🌟 MVP Awards</button>
 </nav>
 
 <main>
@@ -226,6 +245,42 @@ main{max-width:1400px;margin:0 auto;padding:20px 16px}
       <div class="note-item">🇵🇹 <span>Ronaldo:</span> Scores in QF vs Uruguay, exits in SF vs Brazil</div>
       <div class="note-item">🇪🇸 <span>Oyarzabal:</span> Golden Boot — 7 goals including the winning pen in the Final</div>
     </div>
+  </div>
+</div>
+
+<!-- TOP SCORERS -->
+<div id="scorers" class="tab">
+  <div class="round-header">
+    <h2>⚽ Predicted Golden Boot Race</h2>
+    <p>Top 10 tournament goalscorers — projected across the full run to the Final</p>
+  </div>
+  <div class="stats-card">
+    <h3>Top 10 Goalscorers</h3>
+    <div id="scorers-list"></div>
+  </div>
+</div>
+
+<!-- TOP ASSISTS -->
+<div id="assists" class="tab">
+  <div class="round-header">
+    <h2>🎯 Predicted Playmaker Race</h2>
+    <p>Top 10 tournament assist leaders — projected across the full run to the Final</p>
+  </div>
+  <div class="stats-card">
+    <h3>Top 10 Assists</h3>
+    <div id="assists-list"></div>
+  </div>
+</div>
+
+<!-- MVP AWARDS -->
+<div id="mvp" class="tab">
+  <div class="round-header">
+    <h2>🌟 Predicted Player-of-the-Match Awards</h2>
+    <p>Top 10 by projected Man-of-the-Match awards across the tournament — a proxy for the Golden Ball race</p>
+  </div>
+  <div class="stats-card">
+    <h3>Top 10 MVP Awards</h3>
+    <div id="mvp-list"></div>
   </div>
 </div>
 
@@ -476,6 +531,63 @@ const SF = [
   {label:'SF2',h:'🇧🇷 Brazil',a:'🇵🇹 Portugal',hs:2,as:1,note:'Raphinha brace — South America wins'},
 ];
 
+const SCORERS = [
+  {f:'🇪🇸',n:'Mikel Oyarzabal',t:'Spain',v:7,note:'🥇 Golden Boot — incl. the Final-winning penalty'},
+  {f:'🇫🇷',n:'Kylian Mbappé',t:'France',v:6,note:'Brace vs Iraq, decisive again before the QF exit'},
+  {f:'🇵🇹',n:'Cristiano Ronaldo',t:'Portugal',v:6,note:'Scores in the QF vs Uruguay before bowing out in the SF'},
+  {f:'🇧🇷',n:'Raphinha',t:'Brazil',v:5,note:'Brace in the semi-final vs Portugal'},
+  {f:'🇳🇴',n:'Erling Haaland',t:'Norway',v:5,note:'5 in just 4 games despite an early R32 exit'},
+  {f:'🏴󠁧󠁢󠁥󠁮󠁧󠁿',n:'Harry Kane',t:'England',v:5,note:'Group-stage double vs Ghana, gone in the QF vs Argentina'},
+  {f:'🇦🇷',n:'Julián Álvarez',t:'Argentina',v:4,note:"Argentina's spearhead through to the semi-final"},
+  {f:'🇧🇷',n:'Vinícius Júnior',t:'Brazil',v:4,note:'Pace problem for every backline he faces'},
+  {f:'🇳🇱',n:'Cody Gakpo',t:'Netherlands',v:4,note:'Top scorer of a Dutch run that ends in the R16'},
+  {f:'🇪🇸',n:'Lamine Yamal',t:'Spain',v:4,note:'Breakout teenager — goals and chaos from the right'},
+];
+
+const ASSISTS = [
+  {f:'🇪🇸',n:'Pedri',t:'Spain',v:7,note:"Spain's metronome — most chances created of the tournament"},
+  {f:'🇵🇹',n:'Bruno Fernandes',t:'Portugal',v:6,note:'Sets up Ronaldo time and again through the knockouts'},
+  {f:'🇪🇸',n:'Lamine Yamal',t:'Spain',v:5,note:'Double threat — scores and creates from the right wing'},
+  {f:'🏴󠁧󠁢󠁥󠁮󠁧󠁿',n:'Jude Bellingham',t:'England',v:5,note:'Box-to-box creator until the QF exit'},
+  {f:'🇵🇹',n:'Vitinha',t:'Portugal',v:5,note:'Deep-lying playmaker feeding the front line'},
+  {f:'🇧🇪',n:'Kevin De Bruyne',t:'Belgium',v:4,note:'Vintage service in a run to the Round of 16'},
+  {f:'🇩🇪',n:'Florian Wirtz',t:'Germany',v:4,note:'Creative spark in a Germany side that falls to Brazil'},
+  {f:'🇧🇷',n:'Raphinha',t:'Brazil',v:4,note:"Goals AND assists — Brazil's most complete attacker"},
+  {f:'🇳🇱',n:'Frenkie de Jong',t:'Netherlands',v:3,note:'Progresses play from deep for the Dutch'},
+  {f:'🏴󠁧󠁢󠁥󠁮󠁧󠁿',n:'Bukayo Saka',t:'England',v:3,note:"Width and end product down England's right"},
+];
+
+const MVP = [
+  {f:'🇪🇸',n:'Mikel Oyarzabal',t:'Spain',v:4,note:'🏆 Golden Ball favourite — MOTM in the Final'},
+  {f:'🇧🇷',n:'Raphinha',t:'Brazil',v:3,note:'Decisive in the semi-final vs Portugal'},
+  {f:'🇪🇸',n:'Pedri',t:'Spain',v:3,note:"Controls the tempo of Spain's entire run"},
+  {f:'🇵🇹',n:'Cristiano Ronaldo',t:'Portugal',v:3,note:'Inspires Portugal all the way to the semi-final'},
+  {f:'🇫🇷',n:'Kylian Mbappé',t:'France',v:2,note:'Best player in a France side that falls in the QF'},
+  {f:'🇪🇸',n:'Lamine Yamal',t:'Spain',v:2,note:'Standout teenager of the tournament'},
+  {f:'🇵🇹',n:'Bruno Fernandes',t:'Portugal',v:2,note:"Driving force behind Portugal's knockout run"},
+  {f:'🏴󠁧󠁢󠁥󠁮󠁧󠁿',n:'Jude Bellingham',t:'England',v:2,note:'England\'s standout in their run to the QF'},
+  {f:'🇧🇷',n:'Vinícius Júnior',t:'Brazil',v:2,note:'Match-winner off the left for Brazil'},
+  {f:'🇳🇴',n:'Erling Haaland',t:'Norway',v:2,note:'Individual brilliance in a brief Norway campaign'},
+];
+
+function renderStatsList(data, containerId, unit) {
+  const c = document.getElementById(containerId);
+  let html = '';
+  data.forEach((p,i) => {
+    const rankClass = i===0?'r1':i===1?'r2':i===2?'r3':'';
+    html += `<div class="stats-row ${rankClass}">
+      <span class="stats-rank">${i+1}</span>
+      <span class="stats-flag">${p.f}</span>
+      <div class="stats-info">
+        <div class="stats-name">${p.n}</div>
+        <div class="stats-team">${p.t} · ${p.note}</div>
+      </div>
+      <div class="stats-value">${p.v}<span class="stats-unit">${unit}</span></div>
+    </div>`;
+  });
+  c.innerHTML = html;
+}
+
 // Render groups
 const groupsDiv = document.getElementById('groups');
 let groupsHTML = '<div class="groups-grid">';
@@ -549,6 +661,10 @@ renderKnockout(R32, 'r32-grid');
 renderKnockout(R16, 'r16-grid');
 renderKnockout(QF, 'qf-grid');
 renderKnockout(SF, 'sf-grid');
+
+renderStatsList(SCORERS, 'scorers-list', 'Goals');
+renderStatsList(ASSISTS, 'assists-list', 'Assists');
+renderStatsList(MVP, 'mvp-list', 'MOTM');
 </script>
 </body>
 </html>
